@@ -25,11 +25,13 @@
       "@nestjs/core": "^9.0.0",
       "@nestjs/platform-express": "^9.0.0",
       "@nestjs/typeorm": "^9.0.1",
+      "mysql": "^2.18.1",
       "mysql2": "^3.2.0",
+      "pg": "^8.4.0",
+      "phpmyadmin": "^0.0.1-security",
       "reflect-metadata": "^0.1.13",
       "rxjs": "^7.2.0",
-      "typeorm": "0.3.14",
-      "pg": "^8.4.0"
+      "typeorm": "^0.3.14"
    },
    "devDependencies": {
       "@nestjs/cli": "^9.0.0",
