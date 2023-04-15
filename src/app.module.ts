@@ -10,6 +10,7 @@ import { typeOrmConfigAsync } from './config/typeorm.config';
 import { SwaggerModule } from '@nestjs/swagger';
 import { CommonModule } from './common/common.module';
 import { UsersModule } from './users/users.module';
+import { JwtModule } from './jwt/jwt.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,6 +22,7 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     CommonModule,
     UsersModule,
+    JwtModule,
   ],
   controllers: [AppController],
   providers: [AppService],
