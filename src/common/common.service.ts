@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { validate } from 'class-validator';
-import { ObjectLiteral, EntityManager, QueryRunner } from 'typeorm';
+import { ObjectLiteral, EntityManager, QueryRunner, Repository } from 'typeorm';
 import { isNull, isUndefined } from './utils/validation.util';
 import slugify from 'slugify';
 import { v4 } from 'uuid';
@@ -66,7 +66,7 @@ export class CommonService {
   }
 
   public async saveEntity<T extends ObjectLiteral>(
-    manager: EntityManager,
+    manager: Repository<T>,
     entity: T,
     isNew = false,
   ): Promise<void> {
@@ -80,7 +80,7 @@ export class CommonService {
   }
 
   public async removeEntity<T extends ObjectLiteral>(
-    manager: EntityManager,
+    manager: Repository<T>,
     entity: T,
   ): Promise<void> {
     await this.throwInternalError(manager.remove(entity));
