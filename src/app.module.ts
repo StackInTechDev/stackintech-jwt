@@ -8,9 +8,10 @@ import { ConfigModule } from '@nestjs/config';
 import { validationSchema } from './config/config.schema';
 import { typeOrmConfigAsync } from './config/typeorm.config';
 import { SwaggerModule } from '@nestjs/swagger';
+import { CommonModule } from './common/common.module';
+import { UsersModule } from './users/users.module';
 @Module({
   imports: [
-    
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema,
@@ -18,6 +19,8 @@ import { SwaggerModule } from '@nestjs/swagger';
     }),
     TypeOrmModule.forRootAsync(typeOrmConfigAsync),
     AuthModule,
+    CommonModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
