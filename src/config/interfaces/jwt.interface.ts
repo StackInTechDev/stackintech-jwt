@@ -5,7 +5,7 @@ export interface IJwtToken {
 
 export interface IJwt {
   access: IJwtToken;
-  confirmation: IJwtToken;
+  emailConfirmation: IJwtToken;
   resetPassword: IJwtToken;
   refresh: IJwtToken;
 }

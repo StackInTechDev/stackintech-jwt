@@ -22,7 +22,7 @@ export function config(): IConfig {
         secret: process.env.JWT_SECRET,
         time: parseInt(process.env.JWT_ACCESS_TIME, 10),
       },
-      confirmation: {
+      emailConfirmation: {
         secret: process.env.JWT_CONFIRMATION_SECRET,
         time: parseInt(process.env.JWT_CONFIRMATION_TIME, 10),
       },
