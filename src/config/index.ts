@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { IConfig } from './interfaces/config.interface';
-import { typeOrmConfigAsync } from './typeorm.config';
+import { typeOrmConfigAsync } from '../../typeorm.config';
 
 export function config(): IConfig {
   //   const publicKey = readFileSync(
@@ -33,6 +33,15 @@ export function config(): IConfig {
       refresh: {
         secret: process.env.JWT_REFRESH_SECRET,
         time: parseInt(process.env.JWT_REFRESH_TIME, 10),
+      },
+    },
+    emailService: {
+      host: process.env.EMAIL_HOST,
+      port: parseInt(process.env.EMAIL_PORT, 10),
+      secure: process.env.EMAIL_SECURE === 'true',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
       },
     },
     db: typeOrmConfigAsync,

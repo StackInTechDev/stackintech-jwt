@@ -6,11 +6,16 @@ import { AuthModule } from './auth/auth.module';
 import { config } from './config';
 import { ConfigModule } from '@nestjs/config';
 import { validationSchema } from './config/config.schema';
-import { typeOrmConfigAsync } from './config/typeorm.config';
+import { typeOrmConfigAsync } from '../typeorm.config';
 import { SwaggerModule } from '@nestjs/swagger';
+import { CommonModule } from './common/common.module';
+import { UsersModule } from './users/users.module';
+import { JwtModule } from './jwt/jwt.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/guards/canActivate.guard';
+import { MailerModule } from './mailer/mailer.module';
 @Module({
   imports: [
-    
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema,
@@ -18,8 +23,18 @@ import { SwaggerModule } from '@nestjs/swagger';
     }),
     TypeOrmModule.forRootAsync(typeOrmConfigAsync),
     AuthModule,
+    CommonModule,
+    UsersModule,
+    JwtModule,
+    MailerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
