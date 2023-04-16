@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.untity';
+import { User } from './entities/user.entity';
 import { Like, Repository } from 'typeorm';
 import { CommonService } from '../common/common.service';
 import { IUser } from './interfaces/user.interface';
@@ -13,6 +13,9 @@ import { isNull, isUndefined } from '../common/utils/validation.util';
 import { UpdateUserDto } from './dtos/updateUser.dto';
 import { ChangeEmailDto } from './dtos/changeEmail.dto';
 import { compare, hash } from 'bcrypt';
+import { PasswordDto } from './dtos/password.dto';
+import { isUUID } from 'class-validator';
+import { SLUG_REGEX } from '../common/consts/regex.const';
 
 @Injectable()
 export class UsersService {
@@ -26,6 +29,8 @@ export class UsersService {
     await this.checkEmailUniqueness(formattedEmail);
     data.firstName = this.commonService.formatName(data.firstName);
     data.lastName = this.commonService.formatName(data.lastName);
+    data.username = await this.generateUsername(data.lastName);
+    data.password = await hash(data.password, 10);
     const user = this.usersRepository.create(data);
     await this.commonService.saveEntity(this.usersRepository, user, true);
     return user;
@@ -36,7 +41,7 @@ export class UsersService {
         email,
       },
     });
-
+    console.log(count);
     if (count > 0) {
       throw new ConflictException('Email already in use');
     }
@@ -110,6 +115,22 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  public async findOneByIdOrUsername(idOrUsername: string): Promise<User> {
+    if (isUUID(idOrUsername)) {
+      return this.findOneById(idOrUsername);
+    }
+
+    if (
+      idOrUsername.length < 3 ||
+      idOrUsername.length > 106 ||
+      !SLUG_REGEX.test(idOrUsername)
+    ) {
+      throw new BadRequestException('Invalid username');
+    }
+
+    return this.findOneByUsername(idOrUsername);
   }
 
   public async update(userId: string, dto: UpdateUserDto): Promise<User> {
@@ -202,8 +223,13 @@ export class UsersService {
     return user;
   }
 
-  public async remove(userId: string): Promise<User> {
+  public async delete(userId: string, dto: PasswordDto): Promise<User> {
     const user = await this.findOneById(userId);
+
+    if (!(await compare(dto.password, user.password))) {
+      throw new BadRequestException('Wrong password');
+    }
+
     await this.commonService.removeEntity(this.usersRepository, user);
     return user;
   }

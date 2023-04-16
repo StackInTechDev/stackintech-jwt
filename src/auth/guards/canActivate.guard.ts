@@ -8,7 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { isJWT } from 'class-validator';
 import { Request } from 'express';
 
-import { IS_PUBLIC_KEY } from '../../decorators/public.decorator';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { JwtService } from '../../jwt/jwt.service';
 import { isNull, isUndefined } from '../../common/utils/validation.util';
 import { TokenTypeEnum } from '../../jwt/enums/token.enum';

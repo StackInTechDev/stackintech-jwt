@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { CommonService } from '../common/common.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '../jwt/jwt.service';
-import { User } from '../users/entities/user.untity';
+import { User } from '../users/entities/user.entity';
 import { TokenTypeEnum } from '../jwt/enums/token.enum';
 import { SignUpDto } from './dtos/signup.dto';
 import { IMessage } from '../common/interfaces/message.interface';
@@ -28,6 +28,7 @@ export class AuthService {
   constructor(
     @InjectRepository(BlacklistedTokenEntity)
     private readonly blacklistedTokensRepository: Repository<BlacklistedTokenEntity>,
+    @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly commonService: CommonService,
     private readonly usersService: UsersService,

@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  VersionColumn,
 } from 'typeorm';
 import { IUser } from '../interfaces/user.interface';
 import { CredentialsEmbeddable } from '../embeddables/credentials.embeddable';

@@ -1,10 +1,5 @@
-import { Request as ExpressRequest } from 'express';
-
-declare module 'express-serve-static-core' {
-  interface Request extends ExpressRequest {
+declare namespace Express {
+  interface Request {
     user?: string;
-    headers: {
-      [key: string]: string;
-    };
   }
 }

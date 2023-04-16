@@ -3,10 +3,10 @@ import dayjs from 'dayjs';
 import { ICredentials } from '../interfaces/credentials.interface';
 
 export class CredentialsEmbeddable implements ICredentials {
-  @Column({ default: 0 })
+  @Column({ type: 'int', default: 0 })
   public version = 0;
 
-  @Column({ default: '' })
+  @Column({ type: 'varchar', default: '' })
   public lastPassword = '';
 
   @Column({ default: dayjs().unix() })

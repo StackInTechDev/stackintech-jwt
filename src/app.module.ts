@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { config } from './config';
 import { ConfigModule } from '@nestjs/config';
 import { validationSchema } from './config/config.schema';
-import { typeOrmConfigAsync } from './config/typeorm.config';
+import { typeOrmConfigAsync } from '../typeorm.config';
 import { SwaggerModule } from '@nestjs/swagger';
 import { CommonModule } from './common/common.module';
 import { UsersModule } from './users/users.module';

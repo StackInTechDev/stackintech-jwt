@@ -8,7 +8,7 @@ import {
 import { NAME_REGEX, PASSWORD_REGEX } from '../../common/consts/regex.const';
 import { PasswordsDto } from './passwords.dto';
 
-export abstract class SignInDto extends PasswordsDto {
+export abstract class SignInDto {
   @IsNotEmpty()
   @IsString()
   emailOrUsername?: string;

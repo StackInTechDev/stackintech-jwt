@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { User } from '../../users/entities/user.untity';
+import { User } from '../../users/entities/user.entity';
 import { IBlacklistedToken } from '../interfaces/blacklistedToken.interface';
 
 @Entity()

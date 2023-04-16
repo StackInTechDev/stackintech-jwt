@@ -71,12 +71,11 @@ export class CommonService {
     isNew = false,
   ): Promise<void> {
     await this.validateEntity(entity);
-    const queryRunner: QueryRunner = manager.queryRunner;
-    await queryRunner.startTransaction();
+
     if (isNew) {
-      await queryRunner.manager.save(entity);
+      await manager.save(entity);
     }
-    await this.throwDuplicateError(queryRunner.commitTransaction());
+    await this.throwDuplicateError(manager.save(entity));
   }
 
   public async removeEntity<T extends ObjectLiteral>(

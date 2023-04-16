@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { IConfig } from './interfaces/config.interface';
-import { typeOrmConfigAsync } from './typeorm.config';
+import { typeOrmConfigAsync } from '../../typeorm.config';
 
 export function config(): IConfig {
   //   const publicKey = readFileSync(
