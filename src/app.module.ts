@@ -11,6 +11,8 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { CommonModule } from './common/common.module';
 import { UsersModule } from './users/users.module';
 import { JwtModule } from './jwt/jwt.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/guards/canActivate.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,6 +27,12 @@ import { JwtModule } from './jwt/jwt.module';
     JwtModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
