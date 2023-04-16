@@ -1,3 +1,4 @@
+import { IEmailConfig } from './emailConfig.interface';
 import { IJwt } from './jwt.interface';
 import {
   TypeOrmModuleAsyncOptions,
@@ -10,4 +11,5 @@ export interface IConfig {
   domain: string;
   jwt: IJwt;
   db: TypeOrmModuleAsyncOptions;
+  emailService: IEmailConfig;
 }

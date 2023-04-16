@@ -38,12 +38,15 @@ export class UsersController {
   ) {
     this.cookieName = this.configService.get<string>('COOKIE_NAME');
   }
-  //   @Public()
-  //   @Get('/:idOrUsername')
-  //   public async getUser(@Param() params: GetUserParams): Promise<IResponseUser> {
-  //     const user = await this.usersService.findOneByIdOrUsername(idOrUsername);
-  //     return ResponseUserMapper.map(user);
-  //   }
+  @Public()
+  @Get('/:idOrUsername')
+  public async getUser(@Param() params: GetUserParams): Promise<IResponseUser> {
+    const user = await this.usersService.findOneByIdOrUsername(
+      params.idOrUsername,
+    );
+
+    return ResponseUserMapper.map(user);
+  }
 
   @Patch('/email')
   public async updateEmail(

@@ -13,6 +13,7 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from './jwt/jwt.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guards/canActivate.guard';
+import { MailerModule } from './mailer/mailer.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,6 +26,7 @@ import { AuthGuard } from './auth/guards/canActivate.guard';
     CommonModule,
     UsersModule,
     JwtModule,
+    MailerModule,
   ],
   controllers: [AppController],
   providers: [
