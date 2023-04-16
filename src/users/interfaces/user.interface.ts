@@ -1,13 +1,13 @@
 import { ICredentials } from './credentials.interface';
 
 export interface IUser {
-  id: string;
+  id?: string;
   firstName: string;
   lastName: string;
-  username: string;
+  username?: string;
   email: string;
   password: string;
-  confirmed: boolean;
+  confirmed?: boolean;
   credentials?: ICredentials;
   createdAt?: Date;
   updatedAt?: Date;
