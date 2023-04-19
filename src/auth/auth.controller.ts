@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Req,
   Res,
@@ -19,6 +21,13 @@ import { SignUpDto } from './dtos/signup.dto';
 import { IMessage } from '../common/interfaces/message.interface';
 import { SignInDto } from './dtos/signin.dto';
 import { AuthResponseMapper } from './mappers/authReponse.mapper';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { ConfirmEmailDto } from './dtos/confirmEmail.dto';
+import { EmailDto } from './dtos/email.dto';
 
 @Controller('api/auth')
 export class AuthController {
@@ -92,6 +101,47 @@ export class AuthController {
     this.saveRefreshCookie(res, result.refreshToken)
       .status(HttpStatus.OK)
       .json(AuthResponseMapper.map(result));
+  }
+
+  @Public()
+  @Get('/confirm/:confirmationToken')
+  @ApiOkResponse({
+    type: AuthResponseMapper,
+    description: 'Confirms the user email and returns the access token',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid token',
+  })
+  @ApiBadRequestResponse({
+    description:
+      'Something is invalid on the request body, or Token is invalid or expired',
+  })
+  public async confirmEmail(
+    @Origin() origin: string | undefined,
+    @Param() params: ConfirmEmailDto,
+    @Res() res: Response,
+  ): Promise<void> {
+    const result = await this.authService.confirmEmail(
+      params.confirmationToken,
+    );
+    this.saveRefreshCookie(res, result.refreshToken)
+      .status(HttpStatus.OK)
+      .json(AuthResponseMapper.map(result));
+  }
+
+  @Public()
+  @Post('/forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    type: MessageMapper,
+    description:
+      'An email has been sent to the user with the reset password link',
+  })
+  public async forgotPassword(
+    @Origin() origin: string | undefined,
+    @Body() emailDto: EmailDto,
+  ): Promise<IMessage> {
+    return this.authService.resetPasswordEmail(emailDto, origin);
   }
 
   @Post('/logout')
