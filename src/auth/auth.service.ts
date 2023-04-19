@@ -22,6 +22,12 @@ import { ICredentials } from '../users/interfaces/credentials.interface';
 import dayjs from 'dayjs';
 import { IRefreshToken } from '../jwt/interfaces/refreshToken.interfce';
 import { SignInDto } from './dtos/signin.dto';
+import { MailerService } from '../mailer/mailer.service';
+import { isNull, isUndefined } from '../common/utils/validation.util';
+import { EmailDto } from './dtos/email.dto';
+import { ResetPasswordDto } from './dtos/resetPassword.dto';
+import { IEmailToken } from '../jwt/interfaces/emailToken.interface';
+import { ConfirmEmailDto } from './dtos/confirmEmail.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +39,7 @@ export class AuthService {
     private readonly commonService: CommonService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly mailerService: MailerService,
   ) {}
 
   private async generateAuthTokens(
@@ -71,7 +78,7 @@ export class AuthService {
       TokenTypeEnum.CONFIRMATION,
       domain,
     );
-    // this.mailerService.sendConfirmationEmail(user, confirmationToken);
+    this.mailerService.sendConfirmationEmail(user, confirmationToken);
     return this.commonService.generateMessage('Registration successful');
   }
 
@@ -79,6 +86,22 @@ export class AuthService {
     if (password1 !== password2) {
       throw new BadRequestException('Passwords do not match');
     }
+  }
+
+  public async confirmEmail(
+    confirmationToken: string,
+    domain?: string,
+  ): Promise<IAuthResult> {
+    const { id, version } = await this.jwtService.verifyToken<IEmailToken>(
+      confirmationToken,
+      TokenTypeEnum.CONFIRMATION,
+    );
+    const user = await this.usersService.confirmEmail(id, version);
+    const [accessToken, refreshToken] = await this.generateAuthTokens(
+      user,
+      domain,
+    );
+    return { user, accessToken, refreshToken };
   }
 
   public async singIn(dto: SignInDto, domain?: string): Promise<IAuthResult> {
@@ -94,7 +117,7 @@ export class AuthService {
         TokenTypeEnum.CONFIRMATION,
         domain,
       );
-      //this.mailerService.sendConfirmationEmail(user, confirmationToken);
+      this.mailerService.sendConfirmationEmail(user, confirmationToken);
       throw new UnauthorizedException(
         'Please confirm your email, a new email has been sent',
       );
@@ -229,5 +252,34 @@ export class AuthService {
       blacklistedToken,
       true,
     );
+  }
+
+  public async resetPasswordEmail(
+    dto: EmailDto,
+    domain?: string,
+  ): Promise<IMessage> {
+    const user = await this.usersService.uncheckedUserByEmail(dto.email);
+
+    if (!isUndefined(user) && !isNull(user)) {
+      const resetToken = await this.jwtService.generateToken(
+        user,
+        TokenTypeEnum.RESET_PASSWORD,
+        domain,
+      );
+      this.mailerService.sendResetPasswordEmail(user, resetToken);
+    }
+
+    return this.commonService.generateMessage('Reset password email sent');
+  }
+
+  public async resetPassword(dto: ResetPasswordDto): Promise<IMessage> {
+    const { password1, password2, resetToken } = dto;
+    const { id, version } = await this.jwtService.verifyToken<IEmailToken>(
+      resetToken,
+      TokenTypeEnum.RESET_PASSWORD,
+    );
+    this.comparePasswords(password1, password2);
+    await this.usersService.resetPassword(id, version, password1);
+    return this.commonService.generateMessage('Password reset successful');
   }
 }

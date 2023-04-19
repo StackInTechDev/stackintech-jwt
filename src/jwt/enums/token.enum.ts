@@ -1,6 +1,6 @@
 export enum TokenTypeEnum {
   ACCESS = 'access',
   REFRESH = 'refresh',
-  CONFIRMATION = 'confirmation',
+  CONFIRMATION = 'emailConfirmation',
   RESET_PASSWORD = 'resetPassword',
 }

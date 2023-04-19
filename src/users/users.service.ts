@@ -35,6 +35,18 @@ export class UsersService {
     await this.commonService.saveEntity(this.usersRepository, user, true);
     return user;
   }
+  public async confirmEmail(userId: string, version: number): Promise<User> {
+    const user = await this.findOneByCredentials(userId, version);
+
+    if (user.confirmed) {
+      throw new BadRequestException('Email already confirmed');
+    }
+
+    user.confirmed = true;
+    user.credentials.updateVersion();
+    await this.commonService.saveEntity(this.usersRepository, user);
+    return user;
+  }
   private async checkEmailUniqueness(email: string): Promise<void> {
     const count = await this.usersRepository.count({
       where: {
@@ -76,6 +88,14 @@ export class UsersService {
     });
     this.throwUnauthorizedException(user);
     return user;
+  }
+
+  public async uncheckedUserByEmail(email: string): Promise<User> {
+    return this.usersRepository.findOne({
+      where: {
+        email: email.toLowerCase(),
+      },
+    });
   }
 
   private throwUnauthorizedException(user: undefined | null | User): void {
