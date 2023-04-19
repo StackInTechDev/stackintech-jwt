@@ -28,6 +28,7 @@ import {
 } from '@nestjs/swagger';
 import { ConfirmEmailDto } from './dtos/confirmEmail.dto';
 import { EmailDto } from './dtos/email.dto';
+import { MessageMapper } from '../common/mappers/message.mapper';
 
 @Controller('api/auth')
 export class AuthController {
