@@ -108,7 +108,7 @@ export class JwtService {
         );
       case TokenTypeEnum.CONFIRMATION:
       case TokenTypeEnum.RESET_PASSWORD:
-        const { secret, time } = this.jwtConfig.emailConfirmation;
+        const { secret, time } = this.jwtConfig[tokenType];
         return this.commonService.throwInternalError(
           JwtService.generateTokenAsync(
             { id: user.id, version: user.credentials.version },
